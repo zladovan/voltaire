@@ -19,7 +19,7 @@ import scala.util.{Success, Failure}
 class VoltaireActor(ws: WSClient, articles: ArticlesService) extends Actor {
 
   override def receive: Receive = {
-    case CheckChanges => checkChanges
+    case CheckChanges => checkChanges()
   }
 
   private def checkChanges() =

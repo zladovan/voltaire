@@ -1,6 +1,5 @@
-import actors.{CheckChanges}
+import actors.CheckChanges
 import akka.actor.{ActorRef, Scheduler}
-import play.api.Application
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._

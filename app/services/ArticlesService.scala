@@ -36,7 +36,7 @@ class MongoArticlesService(db: DB) extends ArticlesService {
 
   override def createBulk(articles: List[Article]): Future[Either[String, List[Article]]] = {
     val articlesDocuments = articles map { a => Json.toJson(a).as[JsObject] }
-    collection.bulkInsert(articlesDocuments.toStream, false) map {
+    collection.bulkInsert(articlesDocuments.toStream, ordered = false) map {
       case r if r.ok => Right(filterAlreadyExisting(r, articles))
       case r => Left(r.errmsg.getOrElse("Unknown error"))
     }
