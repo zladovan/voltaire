@@ -16,8 +16,8 @@ import scala.concurrent.Future
  * Time: 17:25
  */
 trait ArticlesService {
-  def create(article: Article): Future[Either[String, Article]]
-  def createBulk(articles: List[Article]): Future[Either[String, List[Article]]]
+  def create(article: Article): StoreResult[Article]
+  def createBulk(articles: List[Article]): StoreResult[List[Article]]
   def find: Future[List[Article]]
   def findById(id: String): Future[Option[Article]]
 }
@@ -27,14 +27,14 @@ class MongoArticlesService(db: DB) extends ArticlesService {
 
   lazy val collection = db.collection[JSONCollection]("articles")
 
-  override def create(article: Article): Future[Either[String, Article]] = {
+  override def create(article: Article): StoreResult[Article] = {
     collection.insert(article) map {
       case r if r.ok => Right(article)
       case r => Left(r.message)
     }
   }
 
-  override def createBulk(articles: List[Article]): Future[Either[String, List[Article]]] = {
+  override def createBulk(articles: List[Article]): StoreResult[List[Article]] = {
     val articlesDocuments = articles map { a => Json.toJson(a).as[JsObject] }
     collection.bulkInsert(articlesDocuments.toStream, ordered = false) map {
       case r if r.ok => Right(filterAlreadyExisting(r, articles))

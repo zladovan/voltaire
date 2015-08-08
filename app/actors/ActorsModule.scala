@@ -1,9 +1,9 @@
 package actors
 
-import akka.actor.{Props, ActorSystem}
+import akka.actor.{ActorSystem, Props}
 import com.softwaremill.macwire._
-import play.api.libs.ws.WSClient
-import services.ArticlesService
+
+import scala.concurrent.ExecutionContext
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,10 +12,9 @@ import services.ArticlesService
  * Time: 21:33
  */
 trait ActorsModule {
+
   def createVoltaireActor = actorSystem.actorOf(Props(wire[VoltaireActor]))
 
   def actorSystem: ActorSystem
-
-  def articlesService: ArticlesService
-  def ws: WSClient
+  def articlesUpdateFunctions: List[ExecutionContext => Unit]
 }

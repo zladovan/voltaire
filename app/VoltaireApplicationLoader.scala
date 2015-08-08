@@ -1,14 +1,10 @@
 import actors.ActorsModule
-import akka.actor.Scheduler
 import controllers.Assets
-import play.api.libs.ws.WSClient
-import play.api.libs.ws.ning.NingWSClient
-import play.api.routing.Router
-import play.api._
 import play.api.ApplicationLoader.Context
+import play.api._
+import play.api.routing.Router
 import router.Routes
-
-import scala.concurrent.ExecutionContext
+import services.ArticlesUpdateModule
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,13 +19,11 @@ class VoltaireApplicationLoader extends ApplicationLoader {
   }
 }
 
-trait Components extends BuiltInComponents with ApplicationComponents with ActorsModule {
+trait Components extends BuiltInComponents with ApplicationComponents with ActorsModule with ArticlesUpdateModule {
   import com.softwaremill.macwire.MacwireMacros._
-  import ExecutionContext.Implicits.global
 
   lazy val assets: Assets = wire[Assets]
   lazy val router: Router = wire[Routes] withPrefix "/"
-  lazy val ws: WSClient = NingWSClient()
   lazy val scheduler = actorSystem.scheduler
 
   val schedule = wire[Schedule]
